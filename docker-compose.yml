@@ -15,7 +15,7 @@ services:
     command: roscore
     healthcheck:
       test: ["CMD", "/ros_entrypoint.sh", "rosnode", "list"]
-      interval: 5s
+      interval: 1s
       timeout: 2s
 
   ur5-viz:
