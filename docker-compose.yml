@@ -1,0 +1,40 @@
+
+networks:
+  rosnet:
+    driver: bridge
+
+services:
+  roscore:
+    image: ros:noetic-ros-core
+    container_name: roscore
+    networks:
+      - rosnet
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+      - ROS_HOSTNAME=roscore
+    command: roscore
+    healthcheck:
+      test: ["CMD", "/ros_entrypoint.sh", "rosnode", "list"]
+      interval: 5s
+      timeout: 2s
+
+  ur5-viz:
+    build:
+      context: ur5-viz
+      dockerfile: Dockerfile
+    container_name: ur5-viz
+    depends_on:
+      roscore:
+        condition: service_healthy
+    networks:
+      - rosnet
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+      - DISABLE_ROS1_EOL_WARNINGS=1
+      - ROSCONSOLE_FORMAT=[$${severity}] [$${node}] $${message}
+      - ROS_HOSTNAME=ur5-viz
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/dri:/dev/dri
+    command: roslaunch ur5_moveit_config demo.launch
