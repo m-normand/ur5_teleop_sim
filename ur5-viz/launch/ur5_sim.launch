@@ -1,0 +1,18 @@
+<!-- ur5_sim.launch -->
+<!-- Start RVIZ with a UR5 robot that is controllable via MoveIt -->
+<launch>
+  <group ns="ur5">
+    <include file="$(find ur_gazebo)/launch/ur5_bringup.launch">
+      <arg name="gui" value="false"/>
+    </include>
+
+    <include file="$(find ur5_moveit_config)/launch/moveit_planning_execution.launch">
+      <arg name="sim" value="true"/>
+    </include>
+    <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch"/>
+
+    <node pkg="moveit_servo" type="servo_server" name="servo_server" output="screen">
+      <rosparam command="load" file="$(find ur5_viz)/config/ur5_moveit_servo_config.yaml"/>
+    </node>
+  </group>
+</launch>
