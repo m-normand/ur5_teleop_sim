@@ -12,4 +12,8 @@
   <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="$(find ur5_moveit_config)/launch/moveit.rviz"/>
   </include>
+
+  <node pkg="moveit_servo" type="servo_server" name="servo_server" output="screen">
+    <rosparam command="load" file="$(find ur5_viz)/config/ur5_moveit_servo_config.yaml"/>
+  </node>
 </launch>
