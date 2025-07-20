@@ -32,7 +32,7 @@ install_docker() {
   # shellcheck source=/dev/null
   echo \
     deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable | \
+    "$(awk -F "=" '/VERSION_CODENAME/ { print $2 }' /etc/os-release)" stable | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   sudo apt-get update
 
@@ -40,7 +40,7 @@ install_docker() {
   sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   # Add current Linux user to "docker" Linux group (which was auto created when Docker was installed)
-  sudo usermod -aG docker "$USER"
+  sudo usermod -aG docker "${USER}"
 }
 
 install_apt_reqs() {
@@ -49,8 +49,8 @@ install_apt_reqs() {
   missing_deps=()
 
   for dep in "${required_deps[@]}"; do
-    if ! command -v "$dep" &>/dev/null; then
-      missing_deps+=("$dep")
+    if ! command -v "${dep}" &>/dev/null; then
+      missing_deps+=("${dep}")
     fi
   done
 
