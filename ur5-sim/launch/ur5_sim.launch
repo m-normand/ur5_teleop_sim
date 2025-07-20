@@ -1,19 +1,29 @@
 <!-- ur5_sim.launch -->
-<!-- Start RVIZ with a UR5 robot that is controllable via MoveIt -->
+<!-- Start RVIZ with a UR5 robot that is controllable via MoveIt.
+
+NOTE: Gazebo is launched in a paused state, and the robot is moved into position before unpausing Gazebo.
+Otherwise, the robot may spawn into its 'zero' position, which is a singularity.
+-->
+
 <launch>
+  <!-- Load robot description, spawn model into gazebo, paused -->
   <include file="$(find ur_gazebo)/launch/ur5_bringup.launch">
     <arg name="gui" value="false"/>
+    <arg name="paused" value="true"/>
   </include>
 
+  <!-- Moveit + Rviz -->
   <include file="$(find ur5_moveit_config)/launch/moveit_planning_execution.launch">
     <arg name="sim" value="true"/>
   </include>
-
   <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="config" value="$(find ur5_moveit_config)/launch/moveit.rviz"/>
+    <arg name="config" value="$(find ur5_sim)/config/ur5_sim.rviz"/>
   </include>
 
   <node pkg="moveit_servo" type="servo_server" name="servo_server" output="screen">
     <rosparam command="load" file="$(find ur5_sim)/config/ur5_moveit_servo_config.yaml"/>
   </node>
+
+  <!-- Move robot into position, unpause gazebo -->
+  <node pkg="ur5_sim" type="set_ur5_configuration.sh" name="set_ur5_configuration" output="screen"/>
 </launch>
