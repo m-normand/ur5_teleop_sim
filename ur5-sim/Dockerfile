@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-ur5-moveit-config \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . /ws/src/ur5_viz/
+COPY . /ws/src/ur5_sim/
 WORKDIR /ws
 RUN . /opt/ros/noetic/setup.sh && catkin build --no-status
 

@@ -4,7 +4,7 @@ _ERROR := "[ \33[1;31mERR\33[0m] %b\n"
 
 up: down
 	@printf $(_INFO) "Spinning up UR5 teleop simulation"
-	@xhost +local:root  # Allow Docker to access the X server
+	@xhost +local:rviz-user  # Allow Docker to access the X server
 	@docker compose up -d --remove-orphans
 
 logs:
@@ -12,10 +12,10 @@ logs:
 
 down:
 	@printf $(_INFO) "Ensuring UR5 teleop simulation is down"
-	@if docker ps | grep -q ur5; then \
+	@if docker ps | grep -q roscore; then \
 		printf $(_WARN) "Shutting down UR5 teleop simulation"; \
 		docker compose down; \
-		xhost -local:ros; \
+		xhost -local:rviz-user; \
 	fi
 
 build:

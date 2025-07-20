@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ur5_viz</name>
+  <name>ur5_sim</name>
   <version>0.0.0</version>
   <description>UR5 Visualization</description>
   <maintainer email="normandmichael7@gmail.com">M. Normand</maintainer>
