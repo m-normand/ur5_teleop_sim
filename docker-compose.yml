@@ -37,4 +37,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev/dri:/dev/dri
-    command: roslaunch ur5_moveit_config demo.launch
+      - ./ur5-viz:/ws/src/ur5_viz
+    command: >
+     bash -c ". /ws/devel/setup.bash &&
+      roslaunch --no-summary ur5_viz ur5_sim.launch"
