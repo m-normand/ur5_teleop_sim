@@ -1,0 +1,17 @@
+# keybinds.toml
+# Defines keybindings depending on modes
+
+[twist]
+# Cartesian control
+# For vector movement, set 2 keys for each axis
+stop = "space"
+
+[twist.linear]
+x = ["w", "s"]
+y = ["a", "d"]
+z = ["q", "e"]
+
+[twist.angular]
+x = ["W", "S"]
+y = ["A", "D"]
+z = ["Q", "E"]
