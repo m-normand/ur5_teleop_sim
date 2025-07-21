@@ -12,30 +12,18 @@ namespace keyboard_teleop
 
 const std::unordered_map<std::string, EigenTwist> TWIST_KEYS = {
     {"twist.stop", EigenTwist()},
-    {"twist.linear.x[0]",
-     EigenTwist::LinearTwist(0.001 * Eigen::Vector3f::UnitX())},
-    {"twist.linear.x[1]",
-     EigenTwist::LinearTwist(-0.001 * Eigen::Vector3f::UnitX())},
-    {"twist.linear.y[0]",
-     EigenTwist::LinearTwist(0.001 * Eigen::Vector3f::UnitY())},
-    {"twist.linear.y[1]",
-     EigenTwist::LinearTwist(-0.001 * Eigen::Vector3f::UnitY())},
-    {"twist.linear.z[0]",
-     EigenTwist::LinearTwist(0.001 * Eigen::Vector3f::UnitZ())},
-    {"twist.linear.z[1]",
-     EigenTwist::LinearTwist(-0.001 * Eigen::Vector3f::UnitZ())},
-    {"twist.angular.x[0]",
-     EigenTwist::AngularTwist(0.1 * Eigen::Vector3f::UnitX())},
-    {"twist.angular.x[1]",
-     EigenTwist::AngularTwist(-0.1 * Eigen::Vector3f::UnitX())},
-    {"twist.angular.y[0]",
-     EigenTwist::AngularTwist(0.1 * Eigen::Vector3f::UnitY())},
-    {"twist.angular.y[1]",
-     EigenTwist::AngularTwist(-0.1 * Eigen::Vector3f::UnitY())},
-    {"twist.angular.z[0]",
-     EigenTwist::AngularTwist(0.1 * Eigen::Vector3f::UnitZ())},
-    {"twist.angular.z[1]",
-     EigenTwist::AngularTwist(-0.1 * Eigen::Vector3f::UnitZ())}};
+    {"twist.linear.x[0]", EigenTwist::LinearTwist(Eigen::Vector3f::UnitX())},
+    {"twist.linear.x[1]", EigenTwist::LinearTwist(-Eigen::Vector3f::UnitX())},
+    {"twist.linear.y[0]", EigenTwist::LinearTwist(Eigen::Vector3f::UnitY())},
+    {"twist.linear.y[1]", EigenTwist::LinearTwist(-Eigen::Vector3f::UnitY())},
+    {"twist.linear.z[0]", EigenTwist::LinearTwist(Eigen::Vector3f::UnitZ())},
+    {"twist.linear.z[1]", EigenTwist::LinearTwist(-Eigen::Vector3f::UnitZ())},
+    {"twist.angular.x[0]", EigenTwist::AngularTwist(Eigen::Vector3f::UnitX())},
+    {"twist.angular.x[1]", EigenTwist::AngularTwist(-Eigen::Vector3f::UnitX())},
+    {"twist.angular.y[0]", EigenTwist::AngularTwist(Eigen::Vector3f::UnitY())},
+    {"twist.angular.y[1]", EigenTwist::AngularTwist(-Eigen::Vector3f::UnitY())},
+    {"twist.angular.z[0]", EigenTwist::AngularTwist(Eigen::Vector3f::UnitZ())},
+    {"twist.angular.z[1]", EigenTwist::AngularTwist(-Eigen::Vector3f::UnitZ())}};
 
 /** * @brief Retrieves a keybind from the TOML table.
  * * @param table The TOML table containing keybinds.
