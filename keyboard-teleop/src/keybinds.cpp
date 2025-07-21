@@ -17,7 +17,7 @@ std::string getKeybind(const toml::table &table, const std::string_view tableKey
     {
         keybind = " ";
     }
-    else if (keybind.length() > 1)
+    if (keybind.length() > 1)
     {
         throw std::runtime_error("Keybind " + std::string(tableKey) +
                                  " has more than one char: " + keybind +
@@ -29,8 +29,9 @@ std::string getKeybind(const toml::table &table, const std::string_view tableKey
 std::unordered_map<std::string, std::unique_ptr<EigenTwist>> makeTwistKeybinds(
     const toml::table &table)
 {
-    auto getKey = [&table](const std::string_view key)
-    { return getKeybind(table, key); };
+    auto getKey = [&table](const std::string_view key) {
+        return getKeybind(table, key);
+    };
 
     std::unordered_map<std::string, std::unique_ptr<EigenTwist>> keybinds;
     for (const auto &[key, twist] : TWIST_KEYS)

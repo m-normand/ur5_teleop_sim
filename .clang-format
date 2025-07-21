@@ -11,5 +11,3 @@ AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 SortIncludes: true
 IncludeBlocks: Preserve
-InsertFinalNewline: true
-

@@ -19,3 +19,10 @@ repos:
     hooks:
       - id: markdownlint
         stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: bash -c 'clang-format -i "$@"'
+        language: system
+        files: \.(cpp|hpp|c|h)$
