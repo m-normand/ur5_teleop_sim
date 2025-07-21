@@ -53,13 +53,11 @@ services:
       - rosnet
     environment:
       - ROS_MASTER_URI=http://roscore:11311
-      - DISABLE_ROS1_EOL_WARNINGS=1
       - ROSCONSOLE_FORMAT=[$${severity}] [$${node}] $${message}
-      - ROS_HOSTNAME=ur5-sim
-      - DISPLAY=${DISPLAY}
+      - ROS_HOSTNAME=keyboard-teleop
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./keyboard-teleop:/ws/src/keyboard_teleop
-    command: >
-      bash -c ". /ws/devel/setup.bash &&
-        rosrun keyboard_teleop keyboard_teleop_node"
+    stdin_open: true
+    tty: true
+    command: sleep infinity

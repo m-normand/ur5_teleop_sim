@@ -4,6 +4,7 @@ _ERROR := "[ \33[1;31mERR\33[0m] %b\n"
 
 
 all: ur5 keyboard
+	@$(MAKE) stop
 
 logs:
 	@docker compose logs --tail=100 -f
@@ -16,7 +17,7 @@ ur5: ur5-stop
 	@xhost +local:rviz-user
 
 	@printf $(_INFO) "Spinning up UR5 teleop simulation"
-	@docker compose up -d --remove-orphans ur5-sim
+	@docker compose up -d --remove-orphans
 
 ur5-stop:
 	@printf $(_INFO) "Ensuring UR5 teleop simulation is down"
@@ -29,7 +30,8 @@ ur5-stop:
 
 keyboard:
 	@printf $(_INFO) "Spinning up keyboard-teleop"
-	@docker compose up --remove-orphans keyboard-teleop
+	@docker exec -it keyboard-teleop \
+		bash -ic ". /ws/devel/setup.bash && rosrun keyboard_teleop keyboard_teleop_node"
 
 keyboard-stop:
 	@printf $(_INFO) "Ensuring keyboard-teleop is down"
