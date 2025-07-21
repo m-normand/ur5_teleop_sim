@@ -7,11 +7,13 @@
 stop = "space"
 
 [twist.linear]
+scale = 0.1
 x = ["w", "s"]
 y = ["a", "d"]
 z = ["q", "e"]
 
 [twist.angular]
+scale = 0.5
 x = ["W", "S"]
 y = ["A", "D"]
 z = ["Q", "E"]

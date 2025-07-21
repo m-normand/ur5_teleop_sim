@@ -26,22 +26,22 @@ class EigenTwist
 {
    public:
     EigenTwist()
-        : linear_(Eigen::Vector3i::Zero()), angular_(Eigen::Vector3i::Zero())
+        : linear_(Eigen::Vector3f::Zero()), angular_(Eigen::Vector3f::Zero())
     {
     }
-    EigenTwist(const Eigen::Vector3i &lin, const Eigen::Vector3i &ang)
+    EigenTwist(const Eigen::Vector3f &lin, const Eigen::Vector3f &ang)
         : linear_(lin), angular_(ang)
     {
     }
 
-    static EigenTwist LinearTwist(const Eigen::Vector3i &lin)
+    static EigenTwist LinearTwist(const Eigen::Vector3f &lin)
     {
-        return {lin, Eigen::Vector3i::Zero()};
+        return {lin, Eigen::Vector3f::Zero()};
     }
 
-    static EigenTwist AngularTwist(const Eigen::Vector3i &ang)
+    static EigenTwist AngularTwist(const Eigen::Vector3f &ang)
     {
-        return {Eigen::Vector3i::Zero(), ang};
+        return {Eigen::Vector3f::Zero(), ang};
     }
 
     EigenTwist operator+(const EigenTwist &other) const
@@ -52,7 +52,15 @@ class EigenTwist
         return result;
     }
 
-    geometry_msgs::Twist asMsg()
+    EigenTwist operator*(const float& scale) const
+    {
+        EigenTwist result;
+        result.linear_  = this->linear_ * scale;
+        result.angular_ = this->angular_ * scale;
+        return result;
+    }
+
+    geometry_msgs::Twist asMsg() const
     {
         geometry_msgs::Twist msg;
         msg.linear.x  = linear_.x();
@@ -65,8 +73,8 @@ class EigenTwist
     }
 
    protected:
-    Eigen::Vector3i linear_;
-    Eigen::Vector3i angular_;
+    Eigen::Vector3f linear_;
+    Eigen::Vector3f angular_;
 };
 
 }  // namespace keyboard_teleop
