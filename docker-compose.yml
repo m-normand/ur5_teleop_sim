@@ -1,4 +1,3 @@
-
 networks:
   rosnet:
     driver: bridge
@@ -14,7 +13,7 @@ services:
       - ROS_HOSTNAME=roscore
     command: roscore
     healthcheck:
-      test: ["CMD", "/ros_entrypoint.sh", "rosnode", "list"]
+      test: [ "CMD", "/ros_entrypoint.sh", "rosnode", "list" ]
       interval: 1s
       timeout: 2s
 
@@ -39,8 +38,8 @@ services:
       - /dev/dri:/dev/dri
       - ./ur5-sim:/ws/src/ur5_sim
     command: >
-     bash -c ". /ws/devel/setup.bash &&
-      roslaunch --no-summary ur5_sim ur5_sim.launch"
+      bash -c ". /ws/devel/setup.bash &&
+       roslaunch --no-summary ur5_sim ur5_sim.launch"
 
   keyboard-teleop:
     build:
