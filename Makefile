@@ -3,7 +3,7 @@ _WARN  := "[\33[1;33mWARN\33[0m] %b\n"
 _ERROR := "[ \33[1;31mERR\33[0m] %b\n"
 
 
-all: ur5
+all: ur5 keyboard
 
 logs:
 	@docker compose logs --tail=100 -f

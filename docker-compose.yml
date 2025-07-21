@@ -61,6 +61,6 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./keyboard-teleop:/ws/src/keyboard_teleop
-    stdin_open: true
-    tty: true
-    command: bash
+    command: >
+      bash -c ". /ws/devel/setup.bash &&
+        rosrun keyboard_teleop keyboard_teleop_node"
