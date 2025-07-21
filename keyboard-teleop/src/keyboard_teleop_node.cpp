@@ -15,6 +15,22 @@
 #include "keyboard_teleop/keyboard_reader.hh"
 #include "tomlplusplus/toml.hpp"
 
+void printInstructions()
+{
+    std::cout << "===============================================\n"
+              << "Keyboard Teleoperation Instructions:\n"
+              << "Use the following keys to control the robot:\n"
+              << "  - 'w'/'s' for forward/backward movement\n"
+              << "  - 'a'/'d' for left/right movement\n"
+              << "  - 'q'/'e' for up/down movement\n"
+              << "  - 'W'/'S' for angular rotation around x-axis\n"
+              << "  - 'A'/'D' for angular rotation around y-axis\n"
+              << "  - 'Q'/'E' for angular rotation around z-axis\n"
+              << "Press 'space' to stop the robot.\n"
+              << "Press [ctrl+C] to exit.\n"
+              << "===============================================\n";
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "keyboard_teleop");
@@ -28,14 +44,14 @@ int main(int argc, char **argv)
     const auto twistKeybinds =
         keyboard_teleop::makeTwistKeybinds(toml::parse_file(
             ros::package::getPath("keyboard_teleop") + "/config/keybinds.toml"));
-    auto isRegisteredKey = [&twistKeybinds](char key) {
-        return twistKeybinds.find(key) != twistKeybinds.end();
-    };
+    auto isRegisteredKey = [&twistKeybinds](char key)
+    { return twistKeybinds.find(key) != twistKeybinds.end(); };
 
-    ROS_INFO_STREAM("Starting Terminal UI. Press [ctrl+C] to leave.");
+    ROS_INFO_STREAM("Starting Terminal UI...");
     keyboard_teleop::KeyboardReader &keyboardReader =
         keyboard_teleop::KeyboardReader::getInstance();
 
+    printInstructions();
     int                         key;
     char                        keyChar;
     bool                        staleKeys = false;

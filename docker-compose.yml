@@ -61,5 +61,3 @@ services:
     stdin_open: true
     tty: true
     command: sleep infinity
-      # bash -c ". /ws/devel/setup.bash &&
-      #   rosrun keyboard_teleop keyboard_teleop_node"

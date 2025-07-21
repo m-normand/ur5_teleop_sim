@@ -4,6 +4,7 @@ _ERROR := "[ \33[1;31mERR\33[0m] %b\n"
 
 
 all: ur5 keyboard
+	@$(MAKE) stop
 
 logs:
 	@docker compose logs --tail=100 -f
