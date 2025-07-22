@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "keyboard_teleop");
     ros::NodeHandle nh;
-    ros::Rate       rate_hz(10);
+    ros::Rate       rate_hz(60);
 
     ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::TwistStamped>(
         "/servo_server/delta_twist_cmds", 10);
