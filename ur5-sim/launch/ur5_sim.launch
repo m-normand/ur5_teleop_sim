@@ -10,11 +10,14 @@ Otherwise, the robot may spawn into its 'zero' position, which is a singularity.
   <include file="$(find ur_gazebo)/launch/ur5_bringup.launch">
     <arg name="gui" value="false"/>
     <arg name="paused" value="true"/>
+    <arg name="transmission_hw_interface" value="hardware_interface/PositionJointInterface"/>
+    <arg name="controllers" value="joint_state_controller joint_group_pos_controller"/>
+    <arg name="stopped_controllers" value="pos_joint_traj_controller"/>
   </include>
 
   <!-- Moveit + Rviz -->
   <include file="$(find ur5_moveit_config)/launch/moveit_planning_execution.launch">
-    <arg name="sim" value="true"/>
+    <arg name="sim" value="false"/>
   </include>
   <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="$(find ur5_sim)/config/ur5_sim.rviz"/>
