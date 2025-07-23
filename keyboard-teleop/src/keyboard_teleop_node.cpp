@@ -3,8 +3,8 @@
  * @brief Keyboard teleoperation node for UR5 robot.
  */
 
-#include <termios.h>
-#include <unistd.h>
+#include <mutex>
+#include <thread>
 
 #include <geometry_msgs/TwistStamped.h>
 #include <ros/package.h>
@@ -13,7 +13,9 @@
 #include "keyboard_teleop/eigen_twist.hh"
 #include "keyboard_teleop/keybinds.hh"
 #include "keyboard_teleop/keyboard_reader.hh"
-#include "tomlplusplus/toml.hpp"
+
+static keyboard_teleop::EigenTwist twistCmd;
+static std::mutex                  twistCmdMutex;
 
 void printInstructions()
 {
@@ -31,56 +33,58 @@ void printInstructions()
               << "===============================================\n";
 }
 
+void publishTwistCmd()
+{
+    ros::Publisher cmd_vel_pub =
+        ros::NodeHandle().advertise<geometry_msgs::TwistStamped>(
+            "/servo_server/delta_twist_cmds", 10);
+    ros::Rate rate_hz(60);
+
+    geometry_msgs::TwistStamped twistStampedMsg;
+    while (ros::ok())
+    {
+        twistCmdMutex.lock();
+        twistStampedMsg.twist = twistCmd.asMsg();
+        twistCmd = keyboard_teleop::EigenTwist();  // Reset after publishing
+        twistCmdMutex.unlock();
+
+        twistStampedMsg.header.stamp = ros::Time::now();
+        cmd_vel_pub.publish(twistStampedMsg);
+
+        rate_hz.sleep();
+    }
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "keyboard_teleop");
-    ros::NodeHandle nh;
-    ros::Rate       rate_hz(60);
 
-    ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::TwistStamped>(
-        "/servo_server/delta_twist_cmds", 10);
+    std::thread twistPubThread(publishTwistCmd);
 
     ROS_INFO_STREAM("Loading Keybinds...");
     const auto twistKeybinds =
         keyboard_teleop::makeTwistKeybinds(toml::parse_file(
             ros::package::getPath("keyboard_teleop") + "/config/keybinds.toml"));
-    auto isRegisteredKey = [&twistKeybinds](char key)
-    { return twistKeybinds.find(key) != twistKeybinds.end(); };
 
-    ROS_INFO_STREAM("Starting Terminal UI...");
+    auto isRegisteredKey = [&twistKeybinds](int key)
+    { return twistKeybinds.find(char(key)) != twistKeybinds.end(); };
+
+    printInstructions();
     keyboard_teleop::KeyboardReader &keyboardReader =
         keyboard_teleop::KeyboardReader::getInstance();
 
-    printInstructions();
-    int                         key;
-    char                        keyChar;
-    bool                        staleKeys = false;
-    geometry_msgs::TwistStamped twistMsg;
+    int key;
     while (ros::ok())
     {
-        twistMsg.header.stamp = ros::Time::now();
-
         key = keyboardReader.readChar();
-        if (key == -1)
+        if (isRegisteredKey(key))
         {
-            if (!staleKeys)
-            {
-                twistMsg.twist = geometry_msgs::Twist();
-                cmd_vel_pub.publish(twistMsg);
-            }
-            staleKeys = true;
-            rate_hz.sleep();
-            continue;
+            twistCmdMutex.lock();
+            twistCmd += *twistKeybinds.at(char(key));
+            twistCmdMutex.unlock();
         }
-
-        keyChar = char(key);
-
-        twistMsg.twist = (isRegisteredKey(keyChar))
-                             ? twistKeybinds.at(keyChar)->asMsg()
-                             : geometry_msgs::Twist();
-        cmd_vel_pub.publish(twistMsg);
-
-        staleKeys = false;
-        rate_hz.sleep();
     }
+
+    twistPubThread.join();
+    return 0;
 }

@@ -52,12 +52,19 @@ class EigenTwist
         return result;
     }
 
-    EigenTwist operator*(const float& scale) const
+    EigenTwist operator*(const float &scale) const
     {
         EigenTwist result;
         result.linear_  = this->linear_ * scale;
         result.angular_ = this->angular_ * scale;
         return result;
+    }
+
+    EigenTwist operator+=(const EigenTwist &other)
+    {
+        this->linear_ += other.linear_;
+        this->angular_ += other.angular_;
+        return *this;
     }
 
     geometry_msgs::Twist asMsg() const
