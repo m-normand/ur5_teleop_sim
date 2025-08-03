@@ -10,15 +10,12 @@ A simple simulation that demonstrates teleop of a UR5 via keyboard
 > [!WARNING]
 > Work in progress... Mileage may vary...
 
-- [Usage](#usage)
 - [Installation](#installation)
-- [Running](#running)
+- [Usage](#usage)
 - [Subdirs](#subdirs)
   - [keyboard-teleop](#keyboard-teleop)
   - [ur5-sim](#ur5-sim)
 - [To Do](#to-do)
-
-## Usage
 
 ## Installation
 
@@ -34,7 +31,7 @@ To install
 ./install.sh
 ```
 
-## Running
+## Usage
 
 Use **Makefile** targets instead of invoking `docker` directly
 
@@ -64,4 +61,8 @@ The core simulation to be manipulated.
 
 ## To Do
 
-- [ ] UR5 behaves strange from TwistStamped...
+- [X] UR5 behaves strange from TwistStamped... [#9](https://github.com/m-normand/ur5_teleop_sim/pull/9)
+- [ ] Joint level control of robot
+- [ ] First IK Solution
+- [ ] Singularity Compensation
+- [ ] Tracking Optimization
