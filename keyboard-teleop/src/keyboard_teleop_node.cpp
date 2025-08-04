@@ -19,18 +19,20 @@ static std::mutex                  twistCmdMutex;
 
 void printInstructions()
 {
-    std::cout << "===============================================\n"
-              << "Keyboard Teleoperation Instructions:\n"
-              << "Use the following keys to control the robot:\n"
-              << "  - 'w'/'s' for forward/backward movement\n"
-              << "  - 'a'/'d' for left/right movement\n"
-              << "  - 'q'/'e' for up/down movement\n"
-              << "  - 'W'/'S' for angular rotation around x-axis\n"
-              << "  - 'A'/'D' for angular rotation around y-axis\n"
-              << "  - 'Q'/'E' for angular rotation around z-axis\n"
-              << "Press 'space' to stop the robot.\n"
-              << "Press [ctrl+C] to exit.\n"
-              << "===============================================\n";
+    std::cout << R"(
+===============================================
+Keyboard Teleoperation Instructions:
+Use the following keys to control the robot:
+  - 'w'/'s' for forward/backward movement
+  - 'a'/'d' for left/right movement
+  - 'q'/'e' for up/down movement
+  - 'W'/'S' for angular rotation around x-axis
+  - 'A'/'D' for angular rotation around y-axis
+  - 'Q'/'E' for angular rotation around z-axis
+Press 'space' to stop the robot.
+Press [ctrl+C] to exit.
+===============================================
+")";
 }
 
 void publishTwistCmd()
@@ -62,12 +64,8 @@ int main(int argc, char **argv)
     std::thread twistPubThread(publishTwistCmd);
 
     ROS_INFO_STREAM("Loading Keybinds...");
-    const auto twistKeybinds =
-        keyboard_teleop::makeTwistKeybinds(toml::parse_file(
-            ros::package::getPath("keyboard_teleop") + "/config/keybinds.toml"));
-
-    auto isRegisteredKey = [&twistKeybinds](int key)
-    { return twistKeybinds.find(char(key)) != twistKeybinds.end(); };
+    const keyboard_teleop::Keybinds keybinds(toml::parse_file(
+        ros::package::getPath("keyboard_teleop") + "/config/keybinds.toml"));
 
     printInstructions();
     keyboard_teleop::KeyboardReader &keyboardReader =
@@ -77,10 +75,10 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         key = keyboardReader.readChar();
-        if (isRegisteredKey(key))
+        if (keybinds.isRegisteredKey(key))
         {
             twistCmdMutex.lock();
-            twistCmd += *twistKeybinds.at(char(key));
+            twistCmd += *keybinds.twistKeybinds.at(char(key));
             twistCmdMutex.unlock();
         }
     }
