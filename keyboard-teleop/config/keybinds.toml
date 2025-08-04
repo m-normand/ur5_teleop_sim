@@ -15,3 +15,14 @@ z = ["q", "e"]
 x = ["W", "S"]
 y = ["A", "D"]
 z = ["Q", "E"]
+
+[joint]
+# Joint space control of a 6-DOF manipulator
+stop = "space"
+
+0 = ["1", "!"]
+1 = ["2", "@"]
+2 = ["3", "#"]
+3 = ["4", "$"]
+4 = ["5", "%"]
+5 = ["6", "^"]

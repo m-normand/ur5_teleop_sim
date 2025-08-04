@@ -29,9 +29,8 @@ char getKeybind(const toml::table &table, const std::string_view tableKey)
 std::unordered_map<char, std::unique_ptr<EigenTwist>> makeTwistKeybinds(
     const toml::table &table)
 {
-    auto getKey = [&table](const std::string_view key) {
-        return getKeybind(table, key);
-    };
+    auto getKey = [&table](const std::string_view key)
+    { return getKeybind(table, key); };
 
     std::unordered_map<char, std::unique_ptr<EigenTwist>> keybinds;
     for (const auto &[key, twist] : TWIST_KEYS)
@@ -41,4 +40,21 @@ std::unordered_map<char, std::unique_ptr<EigenTwist>> makeTwistKeybinds(
 
     return keybinds;
 };
+
+std::unordered_map<char, std::unique_ptr<JointCommand>> makeJointKeybinds(
+    const toml::table &table)
+{
+    auto getKey = [&table](const std::string_view key)
+    { return getKeybind(table, key); };
+
+    std::unordered_map<char, std::unique_ptr<JointCommand>> keybinds;
+    for (const auto &[key, command] : JOINT_KEYS)
+    {
+        keybinds[getKey(key)] = std::make_unique<JointCommand>(command);
+    }
+
+    return keybinds;
+};
+
+
 }  // namespace keyboard_teleop
