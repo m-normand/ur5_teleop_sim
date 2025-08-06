@@ -7,6 +7,7 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED
 COMPONENTS
+  roslib
   roscpp
   control_msgs
 )
@@ -14,6 +15,7 @@ find_package(Eigen3 REQUIRED)
 
 catkin_package(
   CATKIN_DEPENDS
+    roslib
     roscpp
     control_msgs
     DEPENDS EIGEN3
