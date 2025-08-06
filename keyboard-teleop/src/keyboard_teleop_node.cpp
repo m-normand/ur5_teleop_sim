@@ -6,6 +6,7 @@
 #include <mutex>
 #include <thread>
 
+#include <control_msgs/JointJog.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <ros/package.h>
 #include <ros/ros.h>
@@ -14,8 +15,12 @@
 #include "keyboard_teleop/keybinds.hh"
 #include "keyboard_teleop/keyboard_reader.hh"
 
+#define PUB_RATE_HZ 60
+
 static keyboard_teleop::EigenTwist twistCmd;
-static std::mutex                  twistCmdMutex;
+static std::mutex twistCmdMutex;
+static keyboard_teleop::JointCommand jointCmd;
+static std::mutex jointCmdMutex;
 
 void printInstructions()
 {
@@ -32,22 +37,22 @@ Use the following keys to control the robot:
 Press 'space' to stop the robot.
 Press [ctrl+C] to exit.
 ===============================================
-")";
+)";
 }
 
-void publishTwistCmd()
+void publishTwistCmd(ros::NodeHandle &nh)
 {
     ros::Publisher cmd_vel_pub =
-        ros::NodeHandle().advertise<geometry_msgs::TwistStamped>(
+        nh.advertise<geometry_msgs::TwistStamped>(
             "/servo_server/delta_twist_cmds", 10);
-    ros::Rate rate_hz(60);
+    ros::Rate rate_hz(PUB_RATE_HZ);
 
     geometry_msgs::TwistStamped twistStampedMsg;
     while (ros::ok())
     {
         twistCmdMutex.lock();
         twistStampedMsg.twist = twistCmd.asMsg();
-        twistCmd = keyboard_teleop::EigenTwist();  // Reset after publishing
+        twistCmd = keyboard_teleop::EigenTwist(); // Reset after publishing
         twistCmdMutex.unlock();
 
         twistStampedMsg.header.stamp = ros::Time::now();
@@ -57,11 +62,81 @@ void publishTwistCmd()
     }
 }
 
+void publishJointCmd(ros::NodeHandle &nh)
+{
+    ros::Publisher joint_cmd_pub =
+        nh.advertise<control_msgs::JointJog>(
+            "/servo_server/delta_joint_cmds", 10);
+    ros::Rate rate_hz(PUB_RATE_HZ);
+
+    control_msgs::JointJog jointJogMsg;
+    jointJogMsg.joint_names = {
+        "shoulder_pan_joint",
+        "shoulder_lift_joint",
+        "elbow_joint",
+        "wrist_1_joint",
+        "wrist_2_joint",
+        "wrist_3_joint",
+    };
+    jointJogMsg.velocities.resize(6, 0.0);
+    jointJogMsg.duration = rate_hz.expectedCycleTime().toSec();
+
+    while (ros::ok())
+    {
+        jointCmdMutex.lock();
+        for (size_t i = 0; i < jointCmd.jointVelocities.size(); i++)
+        {
+            jointJogMsg.velocities[i] = jointCmd.jointVelocities(i);
+            jointCmd.jointVelocities(i) = 0.0; // Reset after publishing
+        }
+        jointCmdMutex.unlock();
+
+        jointJogMsg.header.stamp = ros::Time::now();
+        joint_cmd_pub.publish(jointJogMsg);
+
+        rate_hz.sleep();
+    }
+}
+
+void handleTwistKey(const char &key, const keyboard_teleop::Keybinds &keybinds)
+{
+    if (!keybinds.isTwistKey(key))
+    {
+        return;
+    }
+
+    twistCmdMutex.lock();
+    twistCmd += *keybinds.twistKeybinds.at(key);
+    twistCmdMutex.unlock();
+}
+
+void handleJointKey(const char &key, const keyboard_teleop::Keybinds &keybinds)
+{
+    if (!keybinds.isJointKey(key))
+    {
+        return;
+    }
+
+    jointCmdMutex.lock();
+    jointCmd += *keybinds.jointKeybinds.at(key);
+    jointCmdMutex.unlock();
+}
+
+void waitForTime()
+{
+    while (ros::Time::now().toSec() == 0.0)
+    {
+        ros::Duration(0.1).sleep();
+    }
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "keyboard_teleop");
+    ros::NodeHandle nh;
 
-    std::thread twistPubThread(publishTwistCmd);
+    std::thread twistPubThread(publishTwistCmd, std::ref(nh));
+    std::thread jointPubThread(publishJointCmd, std::ref(nh));
 
     ROS_INFO_STREAM("Loading Keybinds...");
     const keyboard_teleop::Keybinds keybinds(toml::parse_file(
@@ -72,17 +147,16 @@ int main(int argc, char **argv)
         keyboard_teleop::KeyboardReader::getInstance();
 
     int key;
+    int cnt = 0;
     while (ros::ok())
     {
         key = keyboardReader.readChar();
-        if (keybinds.isRegisteredKey(key))
-        {
-            twistCmdMutex.lock();
-            twistCmd += *keybinds.twistKeybinds.at(char(key));
-            twistCmdMutex.unlock();
-        }
+        handleTwistKey(char(key), keybinds);
+        handleJointKey(char(key), keybinds);
     }
 
     twistPubThread.join();
+    jointPubThread.join();
+
     return 0;
 }
