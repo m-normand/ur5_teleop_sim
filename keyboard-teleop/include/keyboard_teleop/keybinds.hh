@@ -69,10 +69,14 @@ struct Keybinds
     std::unordered_map<char, std::unique_ptr<EigenTwist>> twistKeybinds;
     std::unordered_map<char, std::unique_ptr<JointCommand>> jointKeybinds;
 
-    bool isRegisteredKey(const int &key) const
+    bool isTwistKey(const int &key) const
     {
-        return twistKeybinds.find(char(key)) != twistKeybinds.end() ||
-               jointKeybinds.find(char(key)) != jointKeybinds.end();
+        return twistKeybinds.find(char(key)) != twistKeybinds.end();
+    };
+
+    bool isJointKey(const int &key) const
+    {
+        return jointKeybinds.find(char(key)) != jointKeybinds.end();
     };
 
     Keybinds(const toml::table &table)
