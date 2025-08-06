@@ -21,7 +21,8 @@ services:
     build:
       context: ur5-sim
       dockerfile: Dockerfile
-    container_name: ur5-sim
+    image: mnorma/ur5-sim:latest
+    container_name: mnorma-ur5-sim
     depends_on:
       roscore:
         condition: service_healthy
@@ -45,7 +46,8 @@ services:
     build:
       context: keyboard-teleop
       dockerfile: Dockerfile
-    container_name: keyboard-teleop
+    image: mnorma/keyboard-teleop:latest
+    container_name: mnorma-keyboard-teleop
     depends_on:
       roscore:
         condition: service_healthy
