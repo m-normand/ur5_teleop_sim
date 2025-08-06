@@ -63,3 +63,24 @@ services:
     stdin_open: true
     tty: true
     command: sleep infinity
+
+  ur5-ik:
+    build:
+      context: ur5-ik
+      dockerfile: Dockerfile
+    image: mnorma/ur5-ik:latest
+    container_name: mnorma-ur5-ik
+    depends_on:
+      roscore:
+        condition: service_healthy
+    networks:
+      - rosnet
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+      - ROSCONSOLE_FORMAT=[$${severity}] [$${node}] $${message}
+      - ROS_HOSTNAME=ur5-ik
+    volumes:
+      - ./ur5-ik:/ws/src/ur5_ik
+    command: >
+      bash -c ". /ws/devel/setup.bash &&
+       rosrun ur5_ik ur5_ik_node"
