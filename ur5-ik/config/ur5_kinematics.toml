@@ -1,0 +1,29 @@
+[[screw_axes]]
+name = "shoulder_pan_joint"
+angular = [0.0, 0.0, 1.0]
+linear = [0.0, 0.0, 0.0]
+
+[[screw_axes]]
+name = "shoulder_lift_joint"
+angular = [0.0, -1.0, 0.0]
+linear = [0.089159, 0.0, 0.0]
+
+[[screw_axes]]
+name = "elbow_joint"
+angular = [0.0, -1.0, 0.0]
+linear = [0.089159, 0.0, -0.425]
+
+[[screw_axes]]
+name = "wrist_1_joint"
+angular = [0.0, -1.0, 0.0]
+linear = [0.089159, 0.0, -0.81725]
+
+[[screw_axes]]
+name = "wrist_2_joint"
+angular = [0.0, 0.0, -1.0]
+linear = [0.0, 0.81725, 0.0]
+
+[[screw_axes]]
+name = "wrist_3_joint"
+angular = [0.0, -1.0, 0.0]
+linear = [0.10915, 0.0, -0.94194]
