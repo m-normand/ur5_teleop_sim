@@ -62,7 +62,7 @@ The core simulation to be manipulated.
 ## To Do
 
 - [X] UR5 behaves strange from TwistStamped... [#9](https://github.com/m-normand/ur5_teleop_sim/pull/9)
-- [ ] Joint level control of robot
+- [X] Joint level control of robot
 - [ ] First IK Solution
 - [ ] Singularity Compensation
 - [ ] Tracking Optimization
