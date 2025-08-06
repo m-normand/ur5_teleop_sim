@@ -9,6 +9,7 @@ find_package(catkin REQUIRED
 COMPONENTS
   roscpp
   roslib
+  control_msgs
   geometry_msgs
 )
 find_package(Eigen3 REQUIRED)
@@ -17,6 +18,7 @@ catkin_package(
   CATKIN_DEPENDS
     roscpp
     roslib
+    control_msgs
     geometry_msgs
     DEPENDS EIGEN3
 )

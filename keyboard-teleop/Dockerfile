@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     python3-catkin-tools \
     libeigen3-dev \
+    ros-noetic-control-msgs \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . /ws/src/keyboard_teleop/
