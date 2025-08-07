@@ -27,3 +27,9 @@ linear = [0.0, 0.81725, 0.0]
 name = "wrist_3_joint"
 angular = [0.0, -1.0, 0.0]
 linear = [0.10915, 0.0, -0.94194]
+
+[home_pose]
+# Position as a 3 point vector [x, y, z]
+position = [0.81725, 0.0, 0.0]
+# Orientation as a quaternion [x, y, z, w]
+orientation = [1.0, 0.0, 0.0, 0.0]
