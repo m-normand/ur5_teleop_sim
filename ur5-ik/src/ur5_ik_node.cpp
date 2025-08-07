@@ -3,7 +3,7 @@
 #include <ros/package.h>
 #include <ros/ros.h>
 
-#include "ur5_ik/screw_axes_cfg.hh"
+#include "ur5_ik/kinematic_model.hh"
 
 int main(int argc, char** argv)
 {

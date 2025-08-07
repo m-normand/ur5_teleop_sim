@@ -1,10 +1,10 @@
 /**
- * @file kinematics_config.hh
+ * @file kinematic_model.hh
  * @brief Defines methods to load kinematics parameters for the UR5 robot.
  */
 
-#ifndef SCREW_AXES_CFG_HH
-#define SCREW_AXES_CFG_HH
+#ifndef KINEMATIC_MODEL_HH
+#define KINEMATIC_MODEL_HH
 
 #include <Eigen/Dense>
 #include <iomanip>
@@ -90,4 +90,4 @@ void printKinematicModel(const KinematicModel& model);
 
 }  // namespace ur5_ik
 
-#endif  // SCREW_AXES_CFG_HH
+#endif  // KINEMATIC_MODEL_HH

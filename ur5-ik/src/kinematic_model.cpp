@@ -1,4 +1,4 @@
-#include <ur5_ik/screw_axes_cfg.hh>
+#include <ur5_ik/kinematic_model.hh>
 
 namespace ur5_ik
 {
